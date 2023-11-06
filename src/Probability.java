@@ -1,5 +1,3 @@
-import javax.sound.midi.Soundbank;
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Probability {
@@ -14,19 +12,44 @@ public class Probability {
         System.out.println("For Placements[1] - Permutation[2] - Combinations[3]");
         int x = radka.nextInt();
 
-        System.out.println("What is the n ?");
-        int n = radka.nextInt();
-
-        System.out.println("What is the k ?");
-        int k = radka.nextInt();
-
 
         switch (wish) {
             case 'Y':
                 switch (x) {
-                    case 1 -> System.out.println(placementRepetion(n,k));
-                    case 2 -> System.out.println(permutationRepetition(n,k));
+                    case 1 -> {
+                        System.out.println("What is the n ?");
+                        int n = radka.nextInt();
+
+                        System.out.println("What is the k ?");
+                        int k = radka.nextInt();
+
+                        System.out.println(placementRepetition(n,k));
+                    }
+
+                    case 2 -> {
+                        System.out.println("What is the n ?");
+                        int n = radka.nextInt();
+
+                        System.out.print("Enter the number of k values: ");
+                        int k = radka.nextInt();
+
+                        System.out.println();
+                        System.out.println("THE VALUES OF k MUST BE SUMMING UP TO n");
+
+                        int[] kValues = new int[k];
+                        for (int i = 0; i < k; i ++) {
+                            System.out.print("Enter the value of n" + (i + 1) + ": ");
+                            kValues[i] = radka.nextInt();
+                        }
+                        System.out.println(permutationRepetition(n,kValues));
+                    }
+
                     case 3 -> {
+                        System.out.println("What is the n ?");
+                        int n = radka.nextInt();
+
+                        System.out.println("What is the k ?");
+                        int k = radka.nextInt();
                         int y = n + k - 1;
                         System.out.println(combination(n,y));
                     }
@@ -35,9 +58,33 @@ public class Probability {
 
             case 'N' :
                 switch (x) {
-                    case 1 -> System.out.println(placementsNoRepetition(n,k));
-                    case 2 -> System.out.println(permutationNoRepetition(n));
-                    case 3 -> System.out.println(combination(n,k));
+                    case 1 -> {
+                        System.out.println("What is the n ?");
+                        int n = radka.nextInt();
+
+                        System.out.println("What is the k ?");
+                        int k = radka.nextInt();
+
+                        System.out.println(placementsNoRepetition(n,k));
+                    }
+                    case 2 -> {
+                        System.out.println("What is the n ?");
+                        int n = radka.nextInt();
+
+                        System.out.println("What is the k ?");
+                        int k = radka.nextInt();
+
+                        System.out.println(permutationNoRepetition(n));
+                    }
+                    case 3 -> {
+                        System.out.println("What is the n ?");
+                        int n = radka.nextInt();
+
+                        System.out.println("What is the k ?");
+                        int k = radka.nextInt();
+
+                        System.out.println(combination(n,k));
+                    }
                 }
         }
 
@@ -104,32 +151,37 @@ public class Probability {
 
     //-------------------PLACEMENT WITH REPETITION---------------
 
-    public static double placementRepetion (int n, int k) {
+    public static double placementRepetition(int n, int k) {
         return Math.pow(n,k);
     }
 
     //---------------------PERMUTATION WITH REPETITION---------------
 
-    public static long permutationRepetition (int n, int... ni) {
-        int sumNi = 0;
+    public static long permutationRepetition (int n, int[] kValues) {
 
-        for (int num : ni) {
-            if (num < 0) {
-                throw new IllegalArgumentException("All ni values must be non-negative integers.");
+        int k = kValues.length;
+        int sumK = 0;
+
+        for (int i = 0; i < k; i ++) {
+            if (kValues[i] < 0) {
+                throw new IllegalArgumentException("All k values must be non-negative integers.");
             }
-            sumNi +=num;
+
+            sumK += kValues[i];
         }
 
-        if (sumNi != n) {
-            throw new IllegalArgumentException("The sum of ni values must be equal n.");
+        if (sumK != n) {
+            throw new IllegalArgumentException("The sum of k values must equal n.");
         }
 
+        long numerator = calculateFactorial(n);
         long denominator = 1;
-        for (int num : ni) {
-            denominator *= calculateFactorial(num);
+
+        for (int i = 0; i < k; i ++) {
+            denominator *= calculateFactorial(kValues[i]);
         }
 
-        return calculateFactorial(n) / denominator;
+        return numerator / denominator;
     }
 
 }
